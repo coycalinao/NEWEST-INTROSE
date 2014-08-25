@@ -78,6 +78,13 @@ public class UIAdmin extends javax.swing.JFrame {
          for(int i = 0; i < names.size(); i++)
              AdviserComboBox.addItem(names.get(i));
      } 
+     public void setStudent(){
+         ArrayList<String> names;
+         jComboBox1.removeAllItems();
+         names = sDAO.getStudents(gradeLevelComboBox3.getSelectedIndex()+1);
+         for(int i = 0; i < names.size(); i++)
+             jComboBox1.addItem(names.get(i));
+     }
      
     public void changeText(javax.swing.JTextField txtf, String from, String to)
     {
@@ -1634,6 +1641,11 @@ public class UIAdmin extends javax.swing.JFrame {
                 assignButtonMouseClicked(evt);
             }
         });
+        assignButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                assignButtonActionPerformed(evt);
+            }
+        });
         assignFacultyPanel.add(assignButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(201, 330, 80, -1));
 
         bg6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/main_panelbg.png"))); // NOI18N
@@ -1655,7 +1667,7 @@ public class UIAdmin extends javax.swing.JFrame {
         gradeLevelLabel2.setText("Grade Level:");
         assignStudentPanel.add(gradeLevelLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 70, 20));
 
-        gradeLevelComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        gradeLevelComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
         assignStudentPanel.add(gradeLevelComboBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, 190, -1));
 
         Adviser1.setText("Adviser:");
@@ -1668,6 +1680,12 @@ public class UIAdmin extends javax.swing.JFrame {
         assignStudentPanel.add(SectionLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 124, 60, 30));
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        setSection();
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox2ActionPerformed(evt);
+            }
+        });
         assignStudentPanel.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, 190, -1));
 
         invalidInputMessage40.setForeground(new java.awt.Color(255, 0, 0));
@@ -1678,6 +1696,12 @@ public class UIAdmin extends javax.swing.JFrame {
         assignStudentPanel.add(StudentLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 80, 20));
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        setStudent();
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
         assignStudentPanel.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 160, 190, -1));
 
         invalidInputMessage32.setForeground(new java.awt.Color(255, 0, 0));
@@ -2824,6 +2848,26 @@ public class UIAdmin extends javax.swing.JFrame {
     private void gradeLevelComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
         // TODO add your handling code here:
     }                                                   
+
+    private void assignButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        // TODO add your handling code here:
+        jComboBox5.getSelectedItem().toString();
+        AdviserComboBox.getSelectedItem().toString();
+    }                                            
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        ArrayList<String> x = new ArrayList();
+        
+        x = seDAO.getSections(gradeLevelComboBox3.getSelectedItem().toString());
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(x.toArray()));
+    }                                          
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        ArrayList<String> x = new ArrayList();
+        
+        x = sDAO.getStudents(gradeLevelComboBox3.getSelectedIndex()+1);
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(x.toArray()));
+    }                                          
    
     /**
      * @param args the command line arguments
