@@ -50,16 +50,15 @@ public class EmployeeDAO{
             try{
                 connection = getConnection();
                 st = connection.createStatement();
-                System.out.println("xx");
                 if(x > 6)
                     rs = st.executeQuery("select * from employee where departmentEmp = 'High School'");
                 else
                     rs = st.executeQuery("select * from employee where departmentEmp = 'Elementary'");
-                System.out.println("xxx");
-                  //  rs = st.executeQuery("SELECT * FROM EMPLOYEE WHERE departmentEmp IS Elementary AND positionEmp IS Subject Teacher");
                 while(rs.next()){
-                    System.out.println("xxxx");
-                    sNames.add(rs.getString("lastNameEmp"));
+                    a = rs.getString("lastNameEmp").concat(", ").concat(rs.getString("firstNameEmp"));
+                    System.out.println(a);
+                    sNames.add(a);
+                    
                 }
             }catch(SQLException e){
                 System.out.println(e.getMessage() + e.getErrorCode());
