@@ -108,5 +108,21 @@ public class StudentDAO {
             return a;
         }
         
+        public ArrayList<String> getStudents(int x){
+            ArrayList<String> s = new ArrayList();
+            Statement st = null;
+            try{
+                connection = getConnection();
+                st = connection.createStatement();
+                rs = st.executeQuery("SELECT * FROM STUDENT WHERE yearLevelSt = "+x+"");
+                while(rs.next()){
+                    s.add(rs.getString("lastNameSt").concat(", ").concat(rs.getString("firstNameSt")));
+                }
+            }catch(SQLException e){
+                System.out.println(e.getMessage() + e.getErrorCode());
+            }
+            return s;
+        }
+        
         //
 }
