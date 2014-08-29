@@ -1,0 +1,179 @@
+    /*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package databaseCodes;
+
+import ProgramCodes.Employee;
+import ProgramCodes.Student;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ *
+ * @author Jan
+ */
+public class AdminDAO {
+    Connection connection = null;
+    PreparedStatement stmt = null;
+    ResultSet rs = null;
+    private Connection getConnection() throws SQLException {
+	Connection conn;
+	conn = ConnectionFactory.getInstance().getConnection();
+    	return conn;
+    }
+    
+    public boolean addEmployee(Employee emp)
+	{
+            try{
+                String queryString = "INSERT INTO EMPLOYEE(idEmployee, firstNameEmp, middleNameEmp, lastNameEmp, positionEmp, contactNumberEmp,  departmentEmp, genderEmp) VALUES (?,?,?,?,? , ?,?,?)";
+                connection = getConnection();
+                stmt = connection.prepareStatement(queryString);
+                stmt.setString(1, emp.getIdNum());
+                stmt.setString(2, emp.getFirstName());
+                stmt.setString(3, emp.getMidName());
+                stmt.setString(4, emp.getLastName());
+                stmt.setString(5, emp.getPosition());
+                stmt.setString(6, emp.getContactNum());
+                stmt.setString(7, emp.getDepartment());
+                stmt.setString(8, emp.getGender());
+                stmt.executeUpdate();
+            }catch (SQLException e) {
+                System.out.println(e.getMessage() + e.getErrorCode());
+                return false;
+            }
+            return true;
+	}
+    
+        public boolean editEmployeeInfo(Employee emp)
+	{
+            int x =0;
+            try{
+		String queryString = "UPDATE EMPLOYEE SET idEmployee =?, firstNameEmp = ?, middleNameEmp = ?, lastNameEmp = ?, positionEmp = ?, departmentEmp = ?, genderEmp = ?  WHERE idEmployee = '"+emp.getIdNum()+"'";
+		connection = getConnection();
+		stmt = connection.prepareStatement(queryString);
+                stmt.setString(1, emp.getIdNum());
+                stmt.setString(2, emp.getFirstName());
+                stmt.setString(3, emp.getMidName());
+            	stmt.setString(4, emp.getLastName());
+		stmt.setString(5, emp.getPosition());
+                stmt.setString(6, emp.getDepartment());
+                stmt.setString(7, emp.getGender());
+		x = stmt.executeUpdate();
+            }catch (SQLException e) {
+                System.out.println(e.getMessage() + e.getErrorCode());
+                return false;
+            }
+            return true;
+	}
+        
+        public boolean addSection(String s1, String s2){
+            try{
+                String queryString = "INSERT INTO SECTION(sectionName, sectionYearLevel) VALUES (?,?)";
+                connection = getConnection();
+                stmt = connection.prepareStatement(queryString);
+		stmt.setString(1, s2);
+		stmt.setString(2, s1);
+		stmt.executeUpdate();
+            }catch(SQLException e){
+                System.out.println(e.getMessage() + e.getErrorCode());
+                return false;
+            }
+            return true;
+        }
+        
+        public boolean addStudent(Student s){
+            try{
+                String queryString = "INSERT INTO STUDENT(idStudent, firstNameSt, middleNameSt, lastNameSt, genderST, birthDateSt, yearLevelSt) VALUES (?,?,?,?,?,?, ?)";
+                connection = getConnection();
+                stmt = connection.prepareStatement(queryString);
+                
+		stmt.setString(1, s.getIdNum());
+		stmt.setString(2, s.getFirstName());
+		stmt.setString(3, s.getMidName());
+		stmt.setString(4, s.getLastName());
+		stmt.setString(5, s.getGender());
+		stmt.setString(6, s.getDOB());
+                stmt.setInt(7, s.getGradeLvl());
+		stmt.executeUpdate();
+            }catch(SQLException e){
+                System.out.println(e.getMessage() + e.getErrorCode());
+                return false;
+            }
+            return true;
+        }
+        
+        public boolean editStudentInfo(Student s){
+            int x = 0;
+            try{
+                //ResultSet rs = s.executeQuery("SELECT * FROM STUDENT WHERE idStudent = "+ st + "");
+                
+                String queryString = "UPDATE STUDENT SET idStudent =?, firstNameSt = ?, middleNameSt = ?, lastNameSt = ?, genderSt = ?, birthDateSt =?, yearLevelSt = ? WHERE idStudent = '"+s.getIdNum()+"'";
+		connection = getConnection();
+		stmt = connection.prepareStatement(queryString);
+                stmt.setString(1, s.getIdNum());
+                stmt.setString(2, s.getFirstName());
+                stmt.setString(3, s.getMidName());
+            	stmt.setString(4, s.getLastName());
+		stmt.setString(5, s.getGender());
+		stmt.setString(6, s.getDOB());
+		stmt.setInt(7, s.getGradeLvl());
+		x = stmt.executeUpdate();
+                System.out.println(x);
+            }catch(SQLException e){
+                System.out.println(e.getMessage() + e.getErrorCode());
+                return false;
+            }
+            return true;
+        }
+        
+        public boolean addAdviser(String x, int y)
+        {
+             try {
+		String queryString = "INSERT INTO CLASSADVISER(adviserID, ca_classID) VALUES (?, ?)";
+		connection = getConnection();
+		stmt = connection.prepareStatement(queryString);
+		stmt.setString(1, x);
+                stmt.setInt(2, y);
+		stmt.executeUpdate();
+             }catch (SQLException e) {
+                System.out.println(e.getMessage()+ e.getErrorCode());
+                return false;
+            }
+            return true;
+        }
+        
+        public boolean addSubjTeacher(String x, int y, int z){
+            try {
+		String queryString = "INSERT INTO CLASSTEACHER(ct_subjectId, ct_idEmployee ,ct_classID) VALUES (?,?,?)";
+		connection = getConnection();
+		stmt = connection.prepareStatement(queryString);
+		stmt.setInt(1, z);
+		stmt.setInt(3, y);
+                stmt.setString(2, x);
+		stmt.executeUpdate();
+             }catch (SQLException e) {
+                System.out.println(e.getMessage()+ e.getErrorCode());
+                return false;
+            }
+            return true;
+        }
+        
+        public boolean addToClass(String x, int y)
+        {
+             try {
+		String queryString = "INSERT INTO STUDENTROSTER(sr_classID, sr_studentID) VALUES (?, ?)";
+		connection = getConnection();
+		stmt = connection.prepareStatement(queryString);
+		stmt.setString(2, x);
+                stmt.setInt(1, y);
+		stmt.executeUpdate();
+             }catch (SQLException e) {
+                System.out.println(e.getMessage()+ e.getErrorCode());
+                return false;
+            }
+            return true;
+        }
+}
