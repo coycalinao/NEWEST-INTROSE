@@ -1,0 +1,192 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Controllers;
+import UI.xUIAdmin;
+import ProgramCodes.Admin;
+import ProgramCodes.Employee;
+import java.awt.event.ActionListener;
+import ProgramCodes.ErrorHandler;
+import ProgramCodes.Faculty;
+import ProgramCodes.Student;
+import databaseCodes.AdminDAO;
+import databaseCodes.SectionDAO;
+import databaseCodes.EmployeeDAO;
+import databaseCodes.subjectDAO;
+import java.awt.event.ActionEvent;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author Jan
+ */
+public class AdminController {
+    private Admin model;
+    private xUIAdmin view;
+    private ErrorHandler errH;
+    private AdminDAO aDAO;
+    private SectionDAO seDAO;
+    private EmployeeDAO eDAO;
+    private subjectDAO suDAO;
+    private boolean go;
+    
+    public AdminController(xUIAdmin theView , Admin theModel){
+        model = theModel;
+        view = theView;
+        aDAO = new AdminDAO();
+        eDAO = new EmployeeDAO();
+        seDAO = new SectionDAO();
+        suDAO = new subjectDAO();
+        go = false;
+        //view.addPersonalDataButtonListener(new personalDataButtonListener());
+        this.view.addAddButtonListener(new addButtonListener());
+        this.view.addAddButton1Listener(new addButton1Listener());
+        this.view.addAddButton2Listener(new addButton2Listener());
+        this.view.addAssignButtonListener(new addAssignButtonListener());
+        this.view.addAssignButton1Listener(new addAssign1ButtonListener());
+        this.view.addAssignButton2Listener(new addAssign2ButtonListener());
+        
+    }
+    
+    class addButtonListener implements ActionListener{
+        //@Override
+        Student x;
+        @Override
+        public void actionPerformed(ActionEvent e){
+            x = new Student();
+            //if(errH.sCheckCodes(view.getStudentID(), 2) && errH.sLength(view.getStudentID(), 5, 20) && errH.sCheckSpace(view.getStudentID())){
+            try{
+                x.setIdNum(view.getStudentID());
+                System.out.println(view.getStudentID());
+                  //  if(errH.sCheckNames(view.getStudentFirstName())){
+                x.setFirstName(view.getStudentFirstName());
+                    //    if(errH.sCheckNames(view.getStudentLastName())){
+                x.setLastName(view.getStudentLastName());
+                      //      if(errH.sCheckNames(view.getStudentMidName())){
+                x.setMidName(view.getStudentMidName());
+                go = true;
+                        //    }
+                        //}
+                    //}
+                
+                x.setGradeLvl(view.getStudentGradeLevel());
+                x.setGender(view.getStudentGender());
+                x.setDOB(view.getStudentDOB());
+            }catch(NullPointerException ex){
+                System.out.println(ex.getMessage());    
+            }
+            finally{
+                System.out.println(x.getDOB());
+                aDAO.addStudent(x);
+            }
+            
+        }
+    }
+    
+    class addButton1Listener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            Employee x = new Faculty();
+            boolean go = false;
+                x.setIdNum(view.getEmployeeID());
+                x.setFirstName(view.getEmployeeFirstName());
+                x.setLastName(view.getEmployeeLastName());
+                x.setMidName(view.getEmployeeMidName());
+                x.setContactNum(view.getEmployeeContactNum());
+                go = true;
+            
+
+            x.setGender(view.getEmployeeGender());
+            x.setPosition(view.getEmployeePosition());
+            if(!view.getEmployeePosition().equals("Principal"))
+                x.setDepartment(view.getEmployeeDepartment());
+            else
+                x.setDepartment("None");
+            eDAO.addEmployee(x);
+        }
+    }
+    
+    class saveChangesbutton implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            Student s = new Student();
+            s.setIdNum(view.getNewStudentIDNum());
+            s.setLastName(view.getNewStudentLastName());
+            s.setFirstName(view.getNewStudentFirstName());
+            s.setMidName(view.getNewStudentMidName());
+            s.setGender(view.getNewStudentGender());
+            s.setDOB(view.getNewStudentDOB());
+            s.setGradeLvl(view.getNewStudentGradeLevel()    );
+            aDAO.editStudentInfo(s);
+        }
+        
+    }
+    
+    class saveChangesbutton1Listener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            Employee x = new Faculty();
+            boolean go = false;
+            x.setIdNum(view.getNewEmployeeID());
+            x.setFirstName(view.getNewEmployeeFirstName());
+            x.setLastName(view.getNewEmployeeLastName());
+            x.setMidName(view.getNewEmployeeMidName());
+            x.setGender(view.getNewEmployeeGender());
+            x.setPosition(view.getNewEmployeePosition());
+            if(!view.getEmployeePosition().equals("Principal"))
+                x.setDepartment(view.getNewEmployeeDepartment());
+            else
+                x.setDepartment("None");
+            eDAO.editEmployeeInfo(x);
+        }
+    }
+    class addButton2Listener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+           
+               if(aDAO.addSection(view.getSectionGradeLevel(), view.getSectionName()))
+                   System.out.println("");
+                //JOptionPane.showMessageDialog(rootPane, "Section successfully added.");
+                //else
+                 //JOptionPane.showMessageDialog(rootPane, "Error");      
+           }
+    }
+    
+    class addAssignButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            int x;
+            String y;
+            x = seDAO.getSectionID(view.getSectionName1F(), view.getSectionGradeLevelF());
+            y = eDAO.getAdviserID(view.getSectionAdviserIDF());
+            if(aDAO.addAdviser(y, x));
+                System.out.println("");
+        }
+    }
+    class addAssign1ButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            int x;
+            String y;
+            x = seDAO.getSectionID(view.getSectionName2S(), view.getSectionGradeLevelS());
+            y = eDAO.getAdviserID(view.getStudentNameS());
+            if(aDAO.addAdviser(y, x));
+                System.out.println("");
+                
+        }
+    }
+    class addAssign2ButtonListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            int x, z;
+            String y;
+            x = seDAO.getSectionID(view.getSectionName3T(), view.getSectionGradeLevelT());
+            y = eDAO.getAdviserID(view.getSubjTeacherNameT());
+            z = suDAO.getSubjID(view.getSubjectNameT(), Integer.parseInt(view.getSectionGradeLevelT()));
+            if(aDAO.addSubjTeacher(y, x, z))
+                System.out.println("");
+        }
+    }
+    
+    
+}
