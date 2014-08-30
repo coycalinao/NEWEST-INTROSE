@@ -3,10 +3,14 @@
  * and open the template in the editor.
  */
 package Controllers;
+
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import UI.xUIAdmin;
 import ProgramCodes.Admin;
 import ProgramCodes.Employee;
-import java.awt.event.ActionListener;
 import ProgramCodes.ErrorHandler;
 import ProgramCodes.Faculty;
 import ProgramCodes.Student;
@@ -14,8 +18,7 @@ import databaseCodes.AdminDAO;
 import databaseCodes.SectionDAO;
 import databaseCodes.EmployeeDAO;
 import databaseCodes.subjectDAO;
-import java.awt.event.ActionEvent;
-import javax.swing.JOptionPane;
+import databaseCodes.StudentDAO;
 
 /**
  *
@@ -29,7 +32,7 @@ public class AdminController {
     private SectionDAO seDAO;
     private EmployeeDAO eDAO;
     private subjectDAO suDAO;
-    private boolean go;
+    private StudentDAO sDAO;
     
     public AdminController(xUIAdmin theView , Admin theModel){
         model = theModel;
@@ -38,7 +41,7 @@ public class AdminController {
         eDAO = new EmployeeDAO();
         seDAO = new SectionDAO();
         suDAO = new subjectDAO();
-        go = false;
+        sDAO = new StudentDAO();
         //view.addPersonalDataButtonListener(new personalDataButtonListener());
         this.view.addAddButtonListener(new addButtonListener());
         this.view.addAddButton1Listener(new addButton1Listener());
@@ -46,30 +49,28 @@ public class AdminController {
         this.view.addAssignButtonListener(new addAssignButtonListener());
         this.view.addAssignButton1Listener(new addAssign1ButtonListener());
         this.view.addAssignButton2Listener(new addAssign2ButtonListener());
+        this.view.addGradeLevelComboBox2Listener(new gradeLevelComboBox2Listener());
+        this.view.addGradeLevelComboBox3Listener(new gradeLevelComboBox3Listener());
+        this.view.addGradeLevelComboBox7Listener(new gradeLevelComboBox7Listener());
+        this.view.getEditIDNumberComboBox().setModel(new javax.swing.DefaultComboBoxModel(sDAO.getStudents().toArray()));
+        this.view.getEmployeeIDComboBox().setModel(new javax.swing.DefaultComboBoxModel(eDAO.getFaculty().toArray()));
+        this.view.addIDNumberComboBoxListener(new idNumberComboBoxListener());
         
     }
     
     class addButtonListener implements ActionListener{
         //@Override
         Student x;
+        boolean go = false;
         @Override
         public void actionPerformed(ActionEvent e){
             x = new Student();
-            //if(errH.sCheckCodes(view.getStudentID(), 2) && errH.sLength(view.getStudentID(), 5, 20) && errH.sCheckSpace(view.getStudentID())){
+            
             try{
-                x.setIdNum(view.getStudentID());
-                System.out.println(view.getStudentID());
-                  //  if(errH.sCheckNames(view.getStudentFirstName())){
+                x.setIdNum(view.getStudentID());    
                 x.setFirstName(view.getStudentFirstName());
-                    //    if(errH.sCheckNames(view.getStudentLastName())){
                 x.setLastName(view.getStudentLastName());
-                      //      if(errH.sCheckNames(view.getStudentMidName())){
                 x.setMidName(view.getStudentMidName());
-                go = true;
-                        //    }
-                        //}
-                    //}
-                
                 x.setGradeLvl(view.getStudentGradeLevel());
                 x.setGender(view.getStudentGender());
                 x.setDOB(view.getStudentDOB());
@@ -77,10 +78,9 @@ public class AdminController {
                 System.out.println(ex.getMessage());    
             }
             finally{
-                System.out.println(x.getDOB());
                 aDAO.addStudent(x);
+        
             }
-            
         }
     }
     
@@ -188,5 +188,57 @@ public class AdminController {
         }
     }
     
+    class addSaveButton1Listener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            boolean go = false;
+            aDAO.updateSettings(view.getKnowledgePercentage(), "settingKnowledge");
+            aDAO.updateSettings(view.getProcessPercentage(), "settingProcess");
+            aDAO.updateSettings(view.getUnderstandingPercentage(), "settingUnderstanding");
+            aDAO.updateSettings(view.getProductPercentage(), "settingProduct");
+        }
+    }
+    
+    class gradeLevelComboBox2Listener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e){
+            view.setSectionComboBoxF(new javax.swing.DefaultComboBoxModel(seDAO.getSections(view.getGradeLevelF()).toArray()));
+            view.setAdviserComboBoxF(new javax.swing.DefaultComboBoxModel(eDAO.getEmployee(view.getGradeLevelF()).toArray()));
+        }
+    }
+    
+    class gradeLevelComboBox3Listener implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            view.setSectionComboBoxS(new javax.swing.DefaultComboBoxModel(seDAO.getSections(view.getGradeLevelS()).toArray()));
+            view.setStudentComboBoxS(new javax.swing.DefaultComboBoxModel(sDAO.getStudents(view.getGradeLevelS()).toArray()));
+        }
+    }
+    
+    class gradeLevelComboBox7Listener implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            view.setSectionComboBoxT(new javax.swing.DefaultComboBoxModel(seDAO.getSections(view.getGradeLevelT()).toArray()));
+            view.setSubjectComboBoxT(new javax.swing.DefaultComboBoxModel(suDAO.getSubject(view.getGradeLevelT()).toArray()));
+            view.setSubjectTeacherComboBoxT(new javax.swing.DefaultComboBoxModel(eDAO.getEmployee(view.getGradeLevelT()).toArray()));
+        }
+    }
+    
+    class idNumberComboBoxListener implements ActionListener{
+        Student s;
+        public void actionPerformed(ActionEvent e){
+            view.setEditFirstnameTextField(view.getEditFirstName());
+            view.setEditMidnameTextField(view.getEditMidName());
+            view.setEditSurnameTextField(view.getEditLastName());
+            view.setEditDay(view.getEditDay());
+            view.setEditMonth(view.getEditMonth());
+            view.setEditYear(view.getEditYear());
+            view.setEditGender(view.getEditGender());
+            view.setEditYearLevel(view.getEditYearLevel());
+        }
+    }
+    
+    
+    
+    
+            
     
 }
