@@ -1,27 +1,14 @@
 package UI;
 
-import ProgramCodes.Admin;
-import ProgramCodes.Coordinator;
-import ProgramCodes.Employee;
-import ProgramCodes.Faculty;
-import ProgramCodes.Student;
-import javax.swing.JOptionPane;
-import databaseCodes.EmployeeDAO;
-import databaseCodes.StudentDAO;
-import databaseCodes.SectionDAO;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+
 import java.util.Calendar;
-import org.xml.sax.Attributes;
 import java.util.Objects;
-import ProgramCodes.ErrorHandler;
-import ProgramCodes.Principal;
 import javax.swing.DefaultComboBoxModel;
-import databaseCodes.ClassroomDAO;
-import databaseCodes.SettingsDAO;
-import databaseCodes.subjectDAO;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -38,26 +25,13 @@ public class xUIAdmin extends javax.swing.JFrame {
      * Creates new form UIPrincipal
      */
 
-     private EmployeeDAO eDAO = new EmployeeDAO();
-     private StudentDAO sDAO = new StudentDAO();
-     private SectionDAO seDAO = new SectionDAO();
-     private ClassroomDAO cDAO = new ClassroomDAO();
      private Objects[] year;
-     private ErrorHandler errH = new ErrorHandler();
-     private SettingsDAO setDAO = new SettingsDAO();
-     private subjectDAO suDAO = new subjectDAO();
 
      public xUIAdmin() {
         initComponents();
         this.setLocationRelativeTo(null);
 
     }
-      public xUIAdmin(Admin user)
-      {
-          initComponents();
-          setYears();
-          this.setLocationRelativeTo(null);
-      }
 
      public final void setYears()
      {
@@ -80,38 +54,10 @@ public class xUIAdmin extends javax.swing.JFrame {
              yearComboBox.addItem(temp);
          }
      }
-
-      public void setSection(){
-         ArrayList<String> sect;
-         jComboBox5.removeAllItems();
-         sect = seDAO.getSections(gradeLevelComboBox2.getSelectedIndex()+1);
-         for(int i = 0; i < sect.size(); i++)
-            jComboBox5.addItem(sect.get(i));
-     }
-
-     public void setAdviser(){
-         ArrayList<String> names;
-         AdviserComboBox.removeAllItems();
-         String x = "";
-         names = eDAO.getEmployee(gradeLevelComboBox2.getSelectedIndex()+1);
-         //System.out.println(names.size());
-         for(int i = 0; i < names.size(); i++)
-             AdviserComboBox.addItem(names.get(i));
-     }
-
-     public void setStudent(){
-         ArrayList<String> names;
-         jComboBox1.removeAllItems();
-         names = sDAO.getStudents(gradeLevelComboBox3.getSelectedIndex()+1);
-         for(int i = 0; i < names.size(); i++)
-             jComboBox1.addItem(names.get(i));
-     }
-
     public void changeText(javax.swing.JTextField txtf, String from, String to)
     {
         if(txtf.getText().equals(from))
             txtf.setText(to);
-
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -268,7 +214,6 @@ public class xUIAdmin extends javax.swing.JFrame {
         editStudentPanel = new javax.swing.JPanel();
         tabLabel2 = new javax.swing.JLabel();
         IDNumLabel2 = new javax.swing.JLabel();
-        IDNumField2 = new javax.swing.JTextField();
         saveChangesbutton = new javax.swing.JButton();
         surnameLabel = new javax.swing.JLabel();
         firstNameLabel = new javax.swing.JLabel();
@@ -284,11 +229,11 @@ public class xUIAdmin extends javax.swing.JFrame {
         dayComboBox = new javax.swing.JComboBox();
         yearComboBox = new javax.swing.JComboBox();
         yLevelComboBox = new javax.swing.JComboBox();
+        idNumberComboBox = new javax.swing.JComboBox();
         bg2 = new javax.swing.JLabel();
         editFacultyPanel = new javax.swing.JPanel();
         tabLabel3 = new javax.swing.JLabel();
         IDNumLabel3 = new javax.swing.JLabel();
-        IDNumField3 = new javax.swing.JTextField();
         saveChangesbutton1 = new javax.swing.JButton();
         snLabel = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -302,6 +247,7 @@ public class xUIAdmin extends javax.swing.JFrame {
         gCombox = new javax.swing.JComboBox();
         pCombox = new javax.swing.JComboBox();
         dCombox = new javax.swing.JComboBox();
+        employeeIDNumComboBox = new javax.swing.JComboBox();
         bg3 = new javax.swing.JLabel();
         addSectionPanel = new javax.swing.JPanel();
         tabLabel5 = new javax.swing.JLabel();
@@ -912,6 +858,11 @@ public class xUIAdmin extends javax.swing.JFrame {
                 classDataButtonMouseClicked(evt);
             }
         });
+        classDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                classDataButtonActionPerformed(evt);
+            }
+        });
         getContentPane().add(classDataButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 200, 110, -1));
 
         gradesDataButton.setText("Grades Data");
@@ -919,6 +870,11 @@ public class xUIAdmin extends javax.swing.JFrame {
         gradesDataButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 gradesDataButtonMouseClicked(evt);
+            }
+        });
+        gradesDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gradesDataButtonActionPerformed(evt);
             }
         });
         getContentPane().add(gradesDataButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 110, -1));
@@ -942,11 +898,16 @@ public class xUIAdmin extends javax.swing.JFrame {
         accountSettingsButton.setText("Account Settings");
         accountSettingsButton.setOpaque(false);
         accountSettingsButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                accountSettingsButtonMouseEntered(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 accountSettingsButtonMouseClicked(evt);
             }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                accountSettingsButtonMouseEntered(evt);
+        });
+        accountSettingsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                accountSettingsButtonActionPerformed(evt);
             }
         });
         getContentPane().add(accountSettingsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 110, 20));
@@ -988,6 +949,11 @@ public class xUIAdmin extends javax.swing.JFrame {
                 addFacultyButtonMouseClicked(evt);
             }
         });
+        addFacultyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFacultyButtonActionPerformed(evt);
+            }
+        });
         personalDataMenu.add(addFacultyButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 110, -1));
 
         editStudentButton.setText("edit Student");
@@ -997,16 +963,26 @@ public class xUIAdmin extends javax.swing.JFrame {
                 editStudentButtonMouseClicked(evt);
             }
         });
+        editStudentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editStudentButtonActionPerformed(evt);
+            }
+        });
         personalDataMenu.add(editStudentButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 110, -1));
 
         editFacultyButton.setText("edit Faculty");
         editFacultyButton.setOpaque(false);
         editFacultyButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                editFacultyButtonMouseEntered(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 editFacultyButtonMouseClicked(evt);
             }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                editFacultyButtonMouseEntered(evt);
+        });
+        editFacultyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editFacultyButtonActionPerformed(evt);
             }
         });
         personalDataMenu.add(editFacultyButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, 110, -1));
@@ -1036,6 +1012,11 @@ public class xUIAdmin extends javax.swing.JFrame {
                 addSectionButtonMouseClicked(evt);
             }
         });
+        addSectionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSectionButtonActionPerformed(evt);
+            }
+        });
         classDataMenu.add(addSectionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 110, -1));
 
         assignFacultyButton.setText("assign Faculty");
@@ -1043,6 +1024,11 @@ public class xUIAdmin extends javax.swing.JFrame {
         assignFacultyButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 assignFacultyButtonMouseClicked(evt);
+            }
+        });
+        assignFacultyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                assignFacultyButtonActionPerformed(evt);
             }
         });
         classDataMenu.add(assignFacultyButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 110, -1));
@@ -1064,11 +1050,16 @@ public class xUIAdmin extends javax.swing.JFrame {
         editSectionButton.setText("edit Section");
         editSectionButton.setOpaque(false);
         editSectionButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                editSectionButtonMouseEntered(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 editSectionButtonMouseClicked(evt);
             }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                editSectionButtonMouseEntered(evt);
+        });
+        editSectionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editSectionButtonActionPerformed(evt);
             }
         });
         classDataMenu.add(editSectionButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 110, -1));
@@ -1179,6 +1170,11 @@ public class xUIAdmin extends javax.swing.JFrame {
                 quarterSettingsButtonMouseClicked(evt);
             }
         });
+        quarterSettingsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quarterSettingsButtonActionPerformed(evt);
+            }
+        });
         schoolyearSettingsMenu.add(quarterSettingsButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 110, -1));
 
         resetCurrentSettings.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -1227,6 +1223,11 @@ public class xUIAdmin extends javax.swing.JFrame {
         Settings.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 SettingsMouseClicked(evt);
+            }
+        });
+        Settings.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SettingsActionPerformed(evt);
             }
         });
         accountSettingsMenu.add(Settings, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, -1));
@@ -1503,14 +1504,6 @@ public class xUIAdmin extends javax.swing.JFrame {
         IDNumLabel2.setText("ID number:");
         editStudentPanel.add(IDNumLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 70, 20));
 
-        IDNumField2.setText("ID Number");
-        IDNumField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IDNumField2ActionPerformed(evt);
-            }
-        });
-        editStudentPanel.add(IDNumField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 160, -1));
-
         saveChangesbutton.setText("Save Changes");
         saveChangesbutton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1552,9 +1545,19 @@ public class xUIAdmin extends javax.swing.JFrame {
         editStudentPanel.add(mNameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 170, 160, -1));
 
         gComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Male", "Female" }));
+        gComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gComboBoxActionPerformed(evt);
+            }
+        });
         editStudentPanel.add(gComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 200, 160, -1));
 
         monthComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }));
+        monthComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                monthComboBoxActionPerformed(evt);
+            }
+        });
         editStudentPanel.add(monthComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, 80, -1));
 
         dayComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
@@ -1562,10 +1565,28 @@ public class xUIAdmin extends javax.swing.JFrame {
 
         yearComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         setYear();
+        yearComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yearComboBoxActionPerformed(evt);
+            }
+        });
         editStudentPanel.add(yearComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 230, 80, -1));
 
         yLevelComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4",  "5", "6", "7", "8", "9", "10" }));
+        yLevelComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yLevelComboBoxActionPerformed(evt);
+            }
+        });
         editStudentPanel.add(yLevelComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 260, 70, -1));
+
+        idNumberComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        idNumberComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idNumberComboBoxActionPerformed(evt);
+            }
+        });
+        editStudentPanel.add(idNumberComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 160, -1));
 
         bg2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/main_panelbg.png"))); // NOI18N
         bg2.setText("jLabel4");
@@ -1585,14 +1606,6 @@ public class xUIAdmin extends javax.swing.JFrame {
 
         IDNumLabel3.setText("ID number:");
         editFacultyPanel.add(IDNumLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 70, 20));
-
-        IDNumField3.setText("ID Number");
-        IDNumField3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                IDNumField3ActionPerformed(evt);
-            }
-        });
-        editFacultyPanel.add(IDNumField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, 210, -1));
 
         saveChangesbutton1.setText("Save Changes");
         saveChangesbutton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1635,13 +1648,21 @@ public class xUIAdmin extends javax.swing.JFrame {
         editFacultyPanel.add(mnTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, 210, -1));
 
         gCombox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Male", "Female" }));
-        editFacultyPanel.add(gCombox, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 100, -1));
+        editFacultyPanel.add(gCombox, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 200, 210, -1));
 
         pCombox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Subject Teacher", "Coordinator", "Principal" }));
-        editFacultyPanel.add(pCombox, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 230, 100, -1));
+        editFacultyPanel.add(pCombox, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 230, 210, -1));
 
         dCombox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Elementary", "High School" }));
-        editFacultyPanel.add(dCombox, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, 100, -1));
+        editFacultyPanel.add(dCombox, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 260, 210, -1));
+
+        employeeIDNumComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        employeeIDNumComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                employeeIDNumComboBoxActionPerformed(evt);
+            }
+        });
+        editFacultyPanel.add(employeeIDNumComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 80, 210, -1));
 
         bg3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/main_panelbg.png"))); // NOI18N
         bg3.setText("jLabel4");
@@ -1717,8 +1738,6 @@ public class xUIAdmin extends javax.swing.JFrame {
         assignFacultyPanel.add(gradeLevelLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 80, 70, 20));
 
         gradeLevelComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"  }));
-        setSection();
-        setAdviser();
         gradeLevelComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gradeLevelComboBox2ActionPerformed(evt);
@@ -2602,55 +2621,21 @@ public class xUIAdmin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>                        
-
-    private void personalDataButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-    public void addPersonalDataButtonListener(ActionListener l){
+    
+    public void addPDButtonListener(ActionListener l){
         personalDataButton.addActionListener(l);
     }
-
-    private void schoolYearSettingsActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void personalDataButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    
+    private void personalDataButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
         personalDataMenu.setVisible(true);
         accountSettingsMenu.setVisible(false);
         classDataMenu.setVisible(false);
         gradesDataMenu.setVisible(false);
         schoolyearSettingsMenu.setVisible(false);
-    }
-
-
-
-    private void IDNumFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void firstnameFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void middlenameFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void YesButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {
-            addStudentDialogBox.setVisible(true);
-    }
-
-    private void addStudentButtonMouseClicked(java.awt.event.MouseEvent evt) {
-        addStudentPanel.setVisible(true);
-        personalDataMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
         addFacultyPanel.setVisible(false);
-        editFacultyPanel.setVisible(false);
         editStudentPanel.setVisible(false);
-        accountSettingsPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
         addSectionPanel.setVisible(false);
         assignFacultyPanel.setVisible(false);
         assignStudentPanel.setVisible(false);
@@ -2658,27 +2643,86 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                  
+    public void addPersonalDataButtonListener(ActionListener l){
+        personalDataButton.addActionListener(l);
     }
 
-    private void IDNumField1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void schoolYearSettingsActionPerformed(java.awt.event.ActionEvent evt) {                                                   
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(true);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                  
+
+    private void personalDataButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                
+    }                                               
+
+
+
+    private void IDNumFieldActionPerformed(java.awt.event.ActionEvent evt) {                                           
         // TODO add your handling code here:
-    }
+    }                                          
 
-    private void firstnameField1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void firstnameFieldActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // TODO add your handling code here:
-    }
+    }                                              
 
-    private void middlenameField1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void middlenameFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                
         // TODO add your handling code here:
-    }
+    }                                               
 
-    private void addButton1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void YesButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+
+    private void addButtonMouseClicked(java.awt.event.MouseEvent evt) {                                       
+            //addStudentDialogBox.setVisible(true);
+            
+    }                                      
+
+    private void addStudentButtonMouseClicked(java.awt.event.MouseEvent evt) {                                              
+    }                                             
+
+    private void IDNumField1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+        // TODO add your handling code here:
+    }                                           
+
+    private void firstnameField1ActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        // TODO add your handling code here:
+    }                                               
+
+    private void middlenameField1ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
+
+    private void addButton1MouseClicked(java.awt.event.MouseEvent evt) {                                        
         addFacultyDialogBox.setVisible(true);
-    }
+    }                                       
 
-    private void NoButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void NoButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                          
         // TODO add your handling code here:
-    }
+    }                                         
 
     public void addAddButton1Listener(ActionListener l){
         addButton1.addActionListener(l);
@@ -2709,10 +2753,10 @@ public class xUIAdmin extends javax.swing.JFrame {
         return departmentComboBox.getSelectedItem().toString();
     }
 
-    private void addButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-    }
+    private void addButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void addFacultyButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void addFacultyButtonMouseClicked(java.awt.event.MouseEvent evt) {                                              
         personalDataMenu.setVisible(false);
         addFacultyPanel.setVisible(true);
         addStudentPanel.setVisible(false);
@@ -2726,21 +2770,16 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                             
 
-    private void IDNumField2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void saveChangesbuttonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void saveChangesbuttonMouseClicked(java.awt.event.MouseEvent evt) {                                               
         editStudentDialogBox.setVisible(true);
-    }
+    }                                              
 
-    private void NoButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void NoButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    }                                         
 
-    private void editStudentButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void editStudentButtonMouseClicked(java.awt.event.MouseEvent evt) {                                               
         personalDataMenu.setVisible(false);
         editStudentPanel.setVisible(true);
         addStudentPanel.setVisible(false);
@@ -2754,21 +2793,16 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                              
 
-    private void IDNumField3ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void saveChangesbutton1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void saveChangesbutton1MouseClicked(java.awt.event.MouseEvent evt) {                                                
         editFacultyDialogBox.setVisible(true);
-    }
+    }                                               
 
-    private void NoButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void NoButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    }                                         
 
-    private void editFacultyButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void editFacultyButtonMouseClicked(java.awt.event.MouseEvent evt) {                                               
         personalDataMenu.setVisible(false);
         editFacultyPanel.setVisible(true);
         addFacultyPanel.setVisible(false);
@@ -2782,41 +2816,31 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                              
 
-    private void editFacultyButtonMouseEntered(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void editFacultyButtonMouseEntered(java.awt.event.MouseEvent evt) {                                               
+    }                                              
 
-    private void personalDataMenuMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void personalDataMenuMouseClicked(java.awt.event.MouseEvent evt) {                                              
+    }                                             
 
-    private void accountSettingsMenuMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void accountSettingsMenuMouseClicked(java.awt.event.MouseEvent evt) {                                                 
+    }                                                
 
-    private void accountSettingsButtonMouseClicked(java.awt.event.MouseEvent evt) {
-      accountSettingsMenu.setVisible(true);
-      personalDataMenu.setVisible(false);
-      classDataMenu.setVisible(false);
-      gradesDataMenu.setVisible(false);
-      schoolyearSettingsMenu.setVisible(false);
-    }
+    private void accountSettingsButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                   
+    }                                                  
 
-    private void accountSettingsButtonMouseEntered(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void accountSettingsButtonMouseEntered(java.awt.event.MouseEvent evt) {                                                   
+    }                                                  
 
-    private void updateAccountButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void updateAccountButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                 
         accountSettingsDialogBox.setVisible(true);
-    }
+    }                                                
 
-    private void NoButton4ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void NoButton4ActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    }                                         
 
-    private void SettingsMouseClicked(java.awt.event.MouseEvent evt) {
+    private void SettingsMouseClicked(java.awt.event.MouseEvent evt) {                                      
         accountSettingsPanel.setVisible(true);
         accountSettingsMenu.setVisible(false);
         editFacultyPanel.setVisible(false);
@@ -2830,57 +2854,45 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                     
 
-    private void newPasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void newPasswordFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+    }                                                
 
-    private void classDataMenuMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void classDataMenuMouseClicked(java.awt.event.MouseEvent evt) {                                           
+    }                                          
 
-    private void classDataButtonMouseClicked(java.awt.event.MouseEvent evt) {
-        classDataMenu.setVisible(true);
-        personalDataMenu.setVisible(false);
-        accountSettingsMenu.setVisible(false);
-        gradesDataMenu.setVisible(false);
-        schoolyearSettingsMenu.setVisible(false);
-    }
+    private void classDataButtonMouseClicked(java.awt.event.MouseEvent evt) {                                             
+    }                                            
 
-    private void addButton2MouseClicked(java.awt.event.MouseEvent evt) {
+    private void addButton2MouseClicked(java.awt.event.MouseEvent evt) {                                        
         addSectionDialogBox.setVisible(true);
-    }
+    }                                       
 
-    private void YesButton5ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void YesButton5ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void assignButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void assignButtonMouseClicked(java.awt.event.MouseEvent evt) {                                          
         assignFacultyDialogBox.setVisible(true);
-    }
+    }                                         
 
-    private void YesButton6ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void YesButton6ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void assignButton1MouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void assignButton1MouseClicked(java.awt.event.MouseEvent evt) {                                           
+    }                                          
 
-    private void YesButton7ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void YesButton7ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void DoneButton1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void DoneButton1MouseClicked(java.awt.event.MouseEvent evt) {                                         
         editSectionDialogBox.setVisible(true);
-    }
+    }                                        
 
-    private void YesButton8ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void YesButton8ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void viewGradesButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void viewGradesButtonMouseClicked(java.awt.event.MouseEvent evt) {                                              
         viewGradesPanel.setVisible(true);
         gradesDataMenu.setVisible(false);
         changeGradesPanel.setVisible(false);
@@ -2895,9 +2907,9 @@ public class xUIAdmin extends javax.swing.JFrame {
         addStudentPanel.setVisible(false);
         editStudentPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                             
 
-    private void changeGradesButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void changeGradesButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                
         changeGradesPanel.setVisible(true);
         gradesDataMenu.setVisible(false);
         viewGradesPanel.setVisible(false);
@@ -2911,119 +2923,99 @@ public class xUIAdmin extends javax.swing.JFrame {
         addStudentPanel.setVisible(false);
         editStudentPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                               
 
-    private void gradesDataMenuMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void gradesDataMenuMouseClicked(java.awt.event.MouseEvent evt) {                                            
+    }                                           
 
-    private void gradesDataButtonMouseClicked(java.awt.event.MouseEvent evt) {
-      gradesDataMenu.setVisible(true);
-      personalDataMenu.setVisible(false);
-      classDataMenu.setVisible(false);
-      accountSettingsMenu.setVisible(false);
-      schoolyearSettingsMenu.setVisible(false);
-    }
+    private void gradesDataButtonMouseClicked(java.awt.event.MouseEvent evt) {                                              
+    }                                             
 
-    private void viewButtonMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void viewButtonMouseClicked(java.awt.event.MouseEvent evt) {                                        
+    }                                       
 
-    private void viewButton1MouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void viewButton1MouseClicked(java.awt.event.MouseEvent evt) {                                         
+    }                                        
 
-    private void YesButton9ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void YesButton9ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {                                        
         changeGradesDialogBox.setVisible(true);
-    }
+    }                                       
 
-    private void YesButton10ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void YesButton10ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    }                                           
 
-    private void NoButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButtonMouseClicked(java.awt.event.MouseEvent evt) {                                      
         addStudentDialogBox.setVisible(false);
-    }
+    }                                     
 
-    private void NoButton1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton1MouseClicked(java.awt.event.MouseEvent evt) {                                       
         addFacultyDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton2MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton2MouseClicked(java.awt.event.MouseEvent evt) {                                       
        editStudentDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton3MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton3MouseClicked(java.awt.event.MouseEvent evt) {                                       
         editFacultyDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton4MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton4MouseClicked(java.awt.event.MouseEvent evt) {                                       
         accountSettingsDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton5MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton5MouseClicked(java.awt.event.MouseEvent evt) {                                       
         addSectionDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton6MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton6MouseClicked(java.awt.event.MouseEvent evt) {                                       
         assignFacultyDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton7MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton7MouseClicked(java.awt.event.MouseEvent evt) {                                       
         assignStudentDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton8MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton8MouseClicked(java.awt.event.MouseEvent evt) {                                       
         editSectionDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton9MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton9MouseClicked(java.awt.event.MouseEvent evt) {                                       
         changeGradesDialogBox.setVisible(false);
-    }
+    }                                      
 
-    private void NoButton10MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton10MouseClicked(java.awt.event.MouseEvent evt) {                                        
         resetCurrentSettingsDialogBox.setVisible(false);
-    }
+    }                                       
 
-    private void knowledgePercentageFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void knowledgePercentageFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                         
+    }                                                        
 
-    private void understandingPercentageFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void understandingPercentageFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                             
+    }                                                            
 
-    private void productPercentageFieldActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void productPercentageFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                       
+    }                                                      
 
-    private void saveButton1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void saveButton1MouseClicked(java.awt.event.MouseEvent evt) {                                         
         currentSettingsDialogBox.setVisible(true);
-    }
+    }                                        
 
-    private void processPercentageLabelActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void processPercentageLabelActionPerformed(java.awt.event.ActionEvent evt) {                                                       
+    }                                                      
 
-    private void YesButton11ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void YesButton11ActionPerformed(java.awt.event.ActionEvent evt) {                                            
+    }                                           
 
-    private void NoButton11MouseClicked(java.awt.event.MouseEvent evt) {
+    private void NoButton11MouseClicked(java.awt.event.MouseEvent evt) {                                        
         currentSettingsDialogBox.setVisible(false);
-    }
+    }                                       
 
-    private void schoolYearSettingsMouseClicked(java.awt.event.MouseEvent evt) {
-        schoolyearSettingsMenu.setVisible(true);
-        personalDataMenu.setVisible(false);
-        classDataMenu.setVisible(false);
-        gradesDataMenu.setVisible(false);
-        accountSettingsMenu.setVisible(false);
-    }
+    private void schoolYearSettingsMouseClicked(java.awt.event.MouseEvent evt) {                                                
+    }                                               
 
     public void addAddButtonListener(ActionListener l){
         addButton.addActionListener(l);
@@ -3051,12 +3043,11 @@ public class xUIAdmin extends javax.swing.JFrame {
         return studentBirthMonthComboBox.getSelectedItem().toString() +"-"+studentBirthDateComboBox.getSelectedItem().toString() +"-" +studentBirthYearComboBox.getSelectedItem().toString();
     }
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {
-    }
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    }                                         
 
-    private void SearchActionPerformed(java.awt.event.ActionEvent evt) {
-
-    }
+    private void SearchActionPerformed(java.awt.event.ActionEvent evt) {                                       
+    }                                      
 
     public void addAddButton2Listener(ActionListener l){
         addButton2.addActionListener(l);
@@ -3070,50 +3061,45 @@ public class xUIAdmin extends javax.swing.JFrame {
         return gradeLevelCombox1.getSelectedItem().toString();
     }
 
-    private void addButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void addButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
+    private void gradeLevelCombox1ActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+    }                                                 
+    
+    public void setSectionComboBoxF(DefaultComboBoxModel x){
+        jComboBox5.setModel(x);
     }
+    
+    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void gradeLevelCombox1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    public void setAdviserComboBoxF(DefaultComboBoxModel x){
+        AdviserComboBox.setModel(x);
     }
+    private void AdviserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                
+     
+    }                                               
 
-    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {
-        //DefaultComboBoxModel model = new DefaultComboBoxModel(
-        //x = seDAO.getSections(gradeLevelComboBox2.getSelectedIndex()+1);
-        //jComboBox5.setModel(new javax.swing.DefaultComboBoxModel(x.toArray()));
+    private void studentBirthMonthComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                          
+    }                                                         
 
+    private void studentBirthDateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                         
+    }                                                        
 
-    }
+    private void studentBirthYearComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                         
+    }                                                        
 
-    private void AdviserComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-    }
+    private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {                                           
+    }                                          
 
-    private void studentBirthMonthComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void studentGenderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+    }                                                     
 
-    private void studentBirthDateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void facultyGenderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+    }                                                     
 
-    private void studentBirthYearComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void viewButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void studentGenderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void facultyGenderComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void facultyPositionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
+    private void facultyPositionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                        
        if(facultyPositionComboBox.getSelectedItem().toString().equals("Principal"))
        {
            departmentLabel.setVisible(false);
@@ -3124,19 +3110,19 @@ public class xUIAdmin extends javax.swing.JFrame {
            departmentLabel.setVisible(true);
            departmentComboBox.setVisible(true);
        }
-    }
+    }                                                       
 
-    private void assignButton3MouseClicked(java.awt.event.MouseEvent evt) {
+    private void assignButton3MouseClicked(java.awt.event.MouseEvent evt) {                                           
         // TODO add your handling code here:
-    }
+    }                                          
 
-    private void assignButton3ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void assignButton3ActionPerformed(java.awt.event.ActionEvent evt) {                                              
         // TODO add your handling code here:
-    }
+    }                                             
 
-    private void assignButton2MouseClicked(java.awt.event.MouseEvent evt) {
+    private void assignButton2MouseClicked(java.awt.event.MouseEvent evt) {                                           
         // TODO add your handling code here:
-    }
+    }                                          
 
     public void addAssignButton2Listener(ActionListener l ){
         assignButton2.addActionListener(l);
@@ -3154,18 +3140,18 @@ public class xUIAdmin extends javax.swing.JFrame {
     public String getSubjectNameT(){
         return subjectComboBox2.getSelectedItem().toString();
     }
-    private void assignButton2ActionPerformed(java.awt.event.ActionEvent evt) {
-    }
+    private void assignButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    }                                             
 
-    private void saveButton2MouseClicked(java.awt.event.MouseEvent evt) {
+    private void saveButton2MouseClicked(java.awt.event.MouseEvent evt) {                                         
         // TODO add your handling code here:
-    }
+    }                                        
 
-    private void saveButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void saveButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                            
         // TODO add your handling code here:
-    }
+    }                                           
 
-    private void addSectionButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void addSectionButtonMouseClicked(java.awt.event.MouseEvent evt) {                                              
         addSectionPanel.setVisible(true);
         classDataMenu.setVisible(false);
         accountSettingsPanel.setVisible(false);
@@ -3180,9 +3166,9 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                             
 
-    private void assignFacultyButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void assignFacultyButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                 
         assignFacultyPanel.setVisible(true);
         classDataMenu.setVisible(false);
         addSectionPanel.setVisible(false);
@@ -3197,9 +3183,9 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                                
 
-    private void assignStudentButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void assignStudentButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                 
         assignStudentPanel.setVisible(true);
         classDataMenu.setVisible(false);
         assignFacultyPanel.setVisible(false);
@@ -3213,13 +3199,32 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                                
 
-    private void assignStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void assignStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(true);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                   
 
-    private void editSectionButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void editSectionButtonMouseClicked(java.awt.event.MouseEvent evt) {                                               
         editSectionPanel.setVisible(true);
         classDataMenu.setVisible(false);
         assignFacultyPanel.setVisible(false);
@@ -3233,13 +3238,13 @@ public class xUIAdmin extends javax.swing.JFrame {
         viewGradesPanel.setVisible(false);
         changeGradesPanel.setVisible(false);
         currentSettingsPanel.setVisible(false);
-    }
+    }                                              
 
-    private void editSectionButtonMouseEntered(java.awt.event.MouseEvent evt) {
+    private void editSectionButtonMouseEntered(java.awt.event.MouseEvent evt) {                                               
         // TODO add your handling code here:
-    }
+    }                                              
 
-    private void assignSubjectButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void assignSubjectButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                 
         assignFacultyPanel.setVisible(false);
         classDataMenu.setVisible(false);
         addSectionPanel.setVisible(false);
@@ -3256,17 +3261,17 @@ public class xUIAdmin extends javax.swing.JFrame {
         currentSettingsPanel.setVisible(false);
         assignSubjectPanel.setVisible(true);
 
-    }
+    }                                                
 
-    private void editAssignSubjectButtonMouseClicked(java.awt.event.MouseEvent evt) {
+    private void editAssignSubjectButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                     
         // TODO add your handling code here:
-    }
+    }                                                    
 
-    private void schoolyearSettingsMenuMouseClicked(java.awt.event.MouseEvent evt) {
+    private void schoolyearSettingsMenuMouseClicked(java.awt.event.MouseEvent evt) {                                                    
         // TODO add your handling code here:
-    }
+    }                                                   
 
-    private void currentSettingsMouseClicked(java.awt.event.MouseEvent evt) {
+    private void currentSettingsMouseClicked(java.awt.event.MouseEvent evt) {                                             
         currentSettingsPanel.setVisible(true);
         schoolyearSettingsMenu.setVisible(false);
         changeGradesPanel.setVisible(false);
@@ -3279,27 +3284,85 @@ public class xUIAdmin extends javax.swing.JFrame {
         addFacultyPanel.setVisible(false);
         addStudentPanel.setVisible(false);
         editStudentPanel.setVisible(false);
-    }
+    }                                            
 
-    private void currentSettingsActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void quarterSettingsButtonMouseClicked(java.awt.event.MouseEvent evt) {
-        // TODO add your handling code here:
-    }
-
-    private void resetCurrentSettingsMouseClicked(java.awt.event.MouseEvent evt) {
+    private void currentSettingsActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(true);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
         resetCurrentSettingsDialogBox.setVisible(true);
-    }
+    }                                               
 
-    private void resetCurrentSettingsActionPerformed(java.awt.event.ActionEvent evt) {
+    private void quarterSettingsButtonMouseClicked(java.awt.event.MouseEvent evt) {                                                   
         // TODO add your handling code here:
-    }
+    }                                                  
 
-    private void editAssignSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
+    private void resetCurrentSettingsMouseClicked(java.awt.event.MouseEvent evt) {                                                  
+        
+    }                                                 
+
+    private void resetCurrentSettingsActionPerformed(java.awt.event.ActionEvent evt) {                                                     
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                    
+
+    private void editAssignSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(true);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                       
 
     public void addAssignButtonListener(ActionListener l){
         assignButton.addActionListener(l);
@@ -3317,16 +3380,24 @@ public class xUIAdmin extends javax.swing.JFrame {
         return AdviserComboBox.getSelectedItem().toString();
     }
 
-    private void assignButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void assignButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
+    }                                            
+    
+    public void setSectionComboBoxS(DefaultComboBoxModel x){
+        jComboBox2.setModel(x);
     }
-
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
-
+    
+    public void setStudentComboBoxS(DefaultComboBoxModel x){
+        jComboBox1.setModel(x);
     }
+    
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {                                           
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {
+    }                                          
 
-    }
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
+
+    }                                          
 
     public void addAssignButton1Listener(ActionListener l){
         assignButton1.addActionListener(l);
@@ -3340,59 +3411,116 @@ public class xUIAdmin extends javax.swing.JFrame {
     public String getStudentNameS(){
         return jComboBox1.getSelectedItem().toString();
     }
-    private void assignButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-    }
+    private void assignButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    }                                             
 
-    private void saveButton1ActionPerformed(java.awt.event.ActionEvent evt) {
-        boolean go = false;
-        if(errH.sCheckCodes(knowledgePercentageField.getText(), 2)){
-          if(errH.sCheckCodes(processPercentageLabel.getText(), 2)){
-            if(errH.sCheckCodes(understandingPercentageField.getText(), 2)){
-                if(errH.sCheckCodes(knowledgePercentageField.getText(), 2)){
-                    setDAO.updateSettings(Integer.parseInt(knowledgePercentageField.getText()), "settingKnowledge");
-                    setDAO.updateSettings(Integer.parseInt(processPercentageLabel.getText()), "settingProcess");
-                    setDAO.updateSettings(Integer.parseInt(understandingPercentageField.getText()), "settingUnderstanding");
-                    setDAO.updateSettings(Integer.parseInt(productPercentageField.getText()), "settingProduct");
-                }
-            }
-          }
-       }
+    public void addSaveButton1ActionListener(ActionListener l){
+        saveButton1.addActionListener(l);
     }
+    public int getKnowledgePercentage(){
+        return Integer.parseInt(knowledgePercentageField.getText());
+    }
+    public int getProcessPercentage(){
+        return Integer.parseInt(processPercentageLabel.getText());
+    }
+    public int getUnderstandingPercentage(){
+        return Integer.parseInt(understandingPercentageField.getText());
+    }
+    public int getProductPercentage(){
+        return Integer.parseInt(productPercentageField.getText());
+    }
+    private void saveButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                            
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    }                                           
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {                                             
         this.setVisible(false);
         //new mainLogin().setVisible(true);
-    }
+    }                                            
 
-    private void assignSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void assignSubjectButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
         assignSubjectPanel.setVisible(true);
+        quarterSettingsPanel.setVisible(false);
+    }                                                   
+
+    private void addStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(true);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                
+   
+    public void setSectionComboBoxT(DefaultComboBoxModel x){
+        jComboBox6.setModel(x);
     }
+    
+    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {                                           
 
-    private void addStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
+    }                                          
+    
+    public void setSubjectComboBoxT(DefaultComboBoxModel x){
+        subjectComboBox2.setModel(x);
     }
-
-    private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {
-
+    
+    public JRootPane getRootPane(){
+        return rootPane;
     }
-
-    private void subjectComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {
+    
+    private void subjectComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {                                                 
         
+    }                                                
+    
+    public void setSubjectTeacherComboBoxT(DefaultComboBoxModel x){
+        subjectTeacherComboBox.setModel(x);
     }
+    
+    private void subjectTeacherComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                       
 
-    private void subjectTeacherComboBoxActionPerformed(java.awt.event.ActionEvent evt) {
+    }                                                      
 
-    }
-
-    private void firstSectionNameFieldActionPerformed(java.awt.event.ActionEvent evt) {
+    private void firstSectionNameFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         // TODO add your handling code here:
-    }
+    }                                                     
 
     public void addSaveChangesButtonListener(ActionListener l){
         saveChangesbutton.addActionListener(l);
     }
     public String getNewStudentIDNum(){
-        return IDNumField2.getText();
+        return idNumberComboBox.getSelectedItem().toString();
     }
     public String getNewStudentLastName(){
         return surnameTextField.getText();
@@ -3414,16 +3542,16 @@ public class xUIAdmin extends javax.swing.JFrame {
         return yLevelComboBox.getSelectedIndex()+1;
     }
     
-    private void saveChangesbuttonActionPerformed(java.awt.event.ActionEvent evt) {
+    private void saveChangesbuttonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
  
-    }
+    }                                                 
 
     public void addSaveChangesButton1Listener(ActionListener l){
         saveChangesbutton1.addActionListener(l);
     }
     
     public String getNewEmployeeID(){
-        return IDNumField3.getText();
+        return employeeIDNumComboBox.getSelectedItem().toString();
     }
     public String getNewEmployeeLastName(){
         return snTextField.getText();
@@ -3443,46 +3571,388 @@ public class xUIAdmin extends javax.swing.JFrame {
     public String getNewEmployeeGender(){
         return gCombox.getSelectedItem().toString();
     }
-    private void saveChangesbutton1ActionPerformed(java.awt.event.ActionEvent evt) {
+    private void saveChangesbutton1ActionPerformed(java.awt.event.ActionEvent evt) {                                                   
 
+    }                                                  
+    
+    public void addGradeLevelComboBox2Listener(ActionListener l){
+        gradeLevelComboBox2.addActionListener(l);
     }
-
+    
+    public int getGradeLevelF(){
+        return gradeLevelComboBox2.getSelectedIndex()+1;
+    }
+    
     private void gradeLevelComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        ArrayList<String> x = new ArrayList();
-        ArrayList<String> y = new ArrayList();
-        //DefaultComboBoxModel model = new DefaultComboBoxModel(
-        x = seDAO.getSections(gradeLevelComboBox2.getSelectedIndex()+1);
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel(x.toArray()));
-        
-        y = eDAO.getEmployee(gradeLevelComboBox2.getSelectedIndex()+1);
-        AdviserComboBox.setModel(new javax.swing.DefaultComboBoxModel(y.toArray()));
     }                                                   
 
+    public void addGradeLevelComboBox3Listener(ActionListener l){
+        gradeLevelComboBox3.addActionListener(l);
+    }
+    
+    public int getGradeLevelS(){
+        return gradeLevelComboBox3.getSelectedIndex()+1;
+    }
+    
     private void gradeLevelComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        ArrayList<String> x = new ArrayList();
-        x = seDAO.getSections(gradeLevelComboBox3.getSelectedIndex()+1);
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(x.toArray()));
-        
-        ArrayList<String> y = new ArrayList();
-        y = sDAO.getStudents(gradeLevelComboBox3.getSelectedIndex()+1);
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(y.toArray()));
+    }                                                   
+    
+    public void addGradeLevelComboBox7Listener(ActionListener l){
+        gradeLevelComboBox7.addActionListener(l);
+    }
+    
+    public int getGradeLevelT(){
+        return gradeLevelComboBox7.getSelectedIndex()+1;
+    }
+    
+    private void gradeLevelComboBox7ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
     }                                                   
 
-    private void gradeLevelComboBox7ActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        ArrayList<String> x = new ArrayList();
-        
-        x = seDAO.getSections(gradeLevelComboBox7.getSelectedIndex()+1);
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel(x.toArray()));
-        
-        ArrayList<String> y = new ArrayList();
-        
-        y = suDAO.getSubject(gradeLevelComboBox7.getSelectedIndex()+1);
-        subjectComboBox2.setModel(new javax.swing.DefaultComboBoxModel(y.toArray()));
-        
-        ArrayList<String> z = new ArrayList();
-        z = eDAO.getEmployee(gradeLevelComboBox7.getSelectedIndex()+1);
-        subjectTeacherComboBox.setModel(new javax.swing.DefaultComboBoxModel(z.toArray()));
+    private void yLevelComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
+    public void setYearComboBox(DefaultComboBoxModel x){
+        yearComboBox.setModel(x);
+    }
+    private void yearComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                             
+        // TODO add your handling code here:
+    }                                            
+    public void setIDNumberComboBox(DefaultComboBoxModel x){
+        idNumberComboBox.setModel(x);
+    }
+    public JComboBox getEditIDNumberComboBox(){
+        return idNumberComboBox;
+    }
+    public void setEditSurnameTextField(String x){
+        surnameTextField.setText(x);
+    }
+    public void setEditFirstnameTextField(String x){
+        fNameTextField.setText(x);
+    }
+    public void setEditMidnameTextField(String x){
+        mNameTextField.setText(x);
+    }
+    public int getEditID(){
+        return idNumberComboBox.getSelectedIndex();
+    }
+    public String getEditFirstName(){
+        return fNameTextField.getText();
+    }
+    public String getEditMidName(){
+        return mNameTextField.getText();
+    }
+    public String getEditLastName(){
+        return surnameTextField.getText();
+    }
+    public void addIDNumberComboBoxListener(ActionListener l){
+        idNumberComboBox.addActionListener(l);
+    }
+    private void idNumberComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        // TODO add your handling code here:
+    }                                                
+    public int getEditGender(){
+        return gComboBox.getSelectedIndex();
+    }
+    private void gComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                          
+        // TODO add your handling code here:
+    }                                         
+    
+    public void setEditMonth(int x){
+        monthComboBox.setSelectedIndex(x);
+    }
+    public int getEditMonth(){
+        return monthComboBox.getSelectedIndex();
+    }
+    public void setEditDay(int x){
+        dayComboBox.setSelectedIndex(x);
+    }   
+    public int getEditDay(){
+        return dayComboBox.getSelectedIndex();
+    }
+    public int getEditYear(){
+        return yearComboBox.getSelectedIndex();
+    }
+    public void setEditYear(int x){
+        yearComboBox.setSelectedIndex(x);
+    }
+    public int getEditYearLevel(){
+        return yLevelComboBox.getSelectedIndex();
+    }
+    public void setEditYearLevel(int x){
+        yLevelComboBox.setSelectedIndex(x);
+    }
+    public int setEditGender(int x){
+        return gComboBox.getSelectedIndex();
+    }
+    
+    private void monthComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                              
+        // TODO add your handling code here:
+    }                                             
+    
+    public void addEmployeeIDNumComboBoxListener(ActionListener l){
+        employeeIDNumComboBox.addActionListener(l);
+    }
+    public JComboBox getEmployeeIDComboBox(){
+        return employeeIDNumComboBox;
+    }
+    private void employeeIDNumComboBoxActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+        // TODO add your handling code here:
+    }                                                     
+
+    private void addFacultyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(true);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                
+
+    private void editStudentButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(true);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                 
+
+    private void editFacultyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(true);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                 
+    public void addCDButtonListener(ActionListener l){
+        classDataButton.addActionListener(l);
+    }
+    private void classDataButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(true);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                               
+
+    private void gradesDataButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(true);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                
+
+    private void accountSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(true);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                     
+
+    private void addSectionButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                 
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(true);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                
+
+    private void assignFacultyButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(true);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
     }                                                   
+
+    private void editSectionButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(true);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(false);
+    }                                                 
+
+    private void quarterSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                      
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(false);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(true);
+    }                                                     
+
+    private void SettingsActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        personalDataMenu.setVisible(false);
+        accountSettingsMenu.setVisible(false);
+        classDataMenu.setVisible(false);
+        gradesDataMenu.setVisible(false);
+        schoolyearSettingsMenu.setVisible(false);
+        addStudentPanel.setVisible(false);
+        addFacultyPanel.setVisible(false);
+        editStudentPanel.setVisible(false);
+        editFacultyPanel.setVisible(false);
+        addSectionPanel.setVisible(false);
+        assignFacultyPanel.setVisible(false);
+        assignStudentPanel.setVisible(false);
+        editSectionPanel.setVisible(false);
+        viewGradesPanel.setVisible(false);
+        changeGradesPanel.setVisible(false);
+        currentSettingsPanel.setVisible(false);
+        accountSettingsPanel.setVisible(true);
+        editAssignSubjectPanel.setVisible(false);
+        assignSubjectPanel.setVisible(false);
+        quarterSettingsPanel.setVisible(true);
+    }                                        
 
     /**
      * @param args the command line arguments
@@ -3526,8 +3996,6 @@ public class xUIAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel GenderLabel;
     private javax.swing.JTextField IDNumField;
     private javax.swing.JTextField IDNumField1;
-    private javax.swing.JTextField IDNumField2;
-    private javax.swing.JTextField IDNumField3;
     private javax.swing.JLabel IDNumLabel;
     private javax.swing.JLabel IDNumLabel1;
     private javax.swing.JLabel IDNumLabel2;
@@ -3648,6 +4116,7 @@ public class xUIAdmin extends javax.swing.JFrame {
     private javax.swing.JButton editStudentButton;
     private javax.swing.JDialog editStudentDialogBox;
     private javax.swing.JPanel editStudentPanel;
+    private javax.swing.JComboBox employeeIDNumComboBox;
     private javax.swing.JTextField fNameTextField;
     private javax.swing.JComboBox facultyGenderComboBox;
     private javax.swing.JComboBox facultyPositionComboBox;
@@ -3691,6 +4160,7 @@ public class xUIAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel gradeLevelLabel7;
     private javax.swing.JButton gradesDataButton;
     private javax.swing.JPanel gradesDataMenu;
+    private javax.swing.JComboBox idNumberComboBox;
     private javax.swing.JLabel invalidInputMessage;
     private javax.swing.JLabel invalidInputMessage1;
     private javax.swing.JLabel invalidInputMessage10;
