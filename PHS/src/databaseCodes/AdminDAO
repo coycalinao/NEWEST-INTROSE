@@ -176,4 +176,24 @@ public class AdminDAO {
             }
             return true;
         }
+        
+       
+        public boolean updateSettings(int settingValue, String settingName)
+        {
+            int x =0;
+            try{
+                String queryString = "UPDATE SETTINGS SET SettingVal = ? WHERE SettingName = ?;";
+                connection = getConnection();
+                stmt = connection.prepareStatement(queryString);
+
+                stmt.setInt(1, settingValue);
+                stmt.setString(2,settingName);
+                x = stmt.executeUpdate();
+                System.out.println(x);
+            }catch (SQLException e) {
+                System.out.println(e.getMessage());
+                x = 0;
+            }
+            return x != 0;
+        }
 }
